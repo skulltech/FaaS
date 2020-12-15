@@ -12,3 +12,13 @@
 4. Run an apt update, apt upgrade so that everything is up-to-date.
 5. Shutdown the VM and take a snapshot of it at this moment, so that similar VMs can be created easily. Name it "Snapshot 1".
 6. Install Docker on "Server 1" following the [docs](https://docs.docker.com/engine/install/ubuntu).
+7. Do some post-installation steps following [this](https://docs.docker.com/engine/install/linux-postinstall/). Especially the following
+	- Manage docker as a non-root user
+	- Configure docker to start on boot
+	- Configure remote access through systemd unit file
+8. Connect to the docker server remotely using the exposed port and API. Confirm it works with both the CLI client and then the Python SDK.
+9. Start looking into how to deploy a Python function, run it in a container, and get the result. Relevant sources
+	- https://hub.docker.com/_/python
+	- https://runnable.com/docker/python/dockerize-your-python-application
+	- https://vsupalov.com/docker-env-vars/
+
