@@ -1,0 +1,2 @@
+# FaaS
+Handcrafted FaaS platform.
