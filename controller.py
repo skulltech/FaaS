@@ -21,12 +21,12 @@ def deploy(server, payload):
     return image
 
 
-@app.route("/payload/<id>", methods=["GET"])
+@app.route("/payloads/<id>", methods=["GET"])
 def get_payload(id):
     return send_from_directory(app.config["PAYLOAD_FOLDER"], id + ".zip")
 
 
-@app.route("/function", methods=["POST"])
+@app.route("/functions", methods=["POST"])
 def add_function():
     f = request.files.get("file")
     if not f:
@@ -57,7 +57,26 @@ def add_function():
     )
 
 
-@app.route("/function/<id>", methods=["GET"])
+@app.route("/functions", methods=["GET"])
+def list_functions():
+    functions = Function.select()
+    return jsonify(
+        {
+            "status": "success",
+            "functions": [
+                {
+                    "id": function.id,
+                    "handler": function.handler,
+                    "payload": url_for("get_payload", id=id, _external=True),
+                }
+                for function in functions
+            ],
+        },
+        200,
+    )
+
+
+@app.route("/functions/<id>", methods=["GET"])
 def get_function(id):
     if id:
         function = Function.get_or_none(id=id)
@@ -78,7 +97,7 @@ def get_function(id):
     )
 
 
-@app.route("/function/<id>", methods=["PUT"])
+@app.route("/functions/<id>", methods=["PUT"])
 def update_function(id):
     if id:
         function = Function.get_or_none(id=id)
