@@ -13,7 +13,7 @@ def run(function_name):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("function", help="Function name")
+    parser.add_argument("function", help="function name")
     args = parser.parse_args()
     result = run(args.function)
     print(result)

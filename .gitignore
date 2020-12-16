@@ -1,2 +1,5 @@
 *.zip
 venv
+__pycache__
+*.db
+*.json

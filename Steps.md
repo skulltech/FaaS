@@ -21,4 +21,7 @@
 	- https://hub.docker.com/_/python
 	- https://runnable.com/docker/python/dockerize-your-python-application
 	- https://vsupalov.com/docker-env-vars/
-
+	- https://goinbigdata.com/docker-run-vs-cmd-vs-entrypoint
+	- https://habiletechnologies.com/blog/better-saving-files-database-file-system/
+	- https://codeburst.io/know-your-http-status-a-cheat-sheet-for-http-status-codes-5fb43863e589
+	- https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
