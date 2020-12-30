@@ -17,7 +17,7 @@ class FileOut(BaseModel):
     url: str
 
 
-class FileList(BaseModel):
+class FileOutList(BaseModel):
     files: List[FileOut]
 
 
@@ -34,14 +34,14 @@ def get_file(filename: str):
     )
 
 
-@app.get("/files", response_model=FileList)
+@app.get("/files", response_model=FileOutList)
 def list_files():
     files = [
         f
         for f in os.listdir(settings.storage_directory)
         if os.path.isfile(os.path.join(settings.storage_directory, f))
     ]
-    return FileList(
+    return FileOutList(
         files=[
             FileOut(
                 filename=filename,
