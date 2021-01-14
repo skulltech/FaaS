@@ -1,5 +1,4 @@
-*.zip
 venv
 __pycache__
-*.db
 app
+.vagrant

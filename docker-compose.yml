@@ -1,0 +1,49 @@
+version: "3.9"
+services:
+  registry:
+    image: "registry:2"
+    ports:
+      - "6000:5000"
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: "db"
+      MYSQL_USER: "faas"
+      MYSQL_PASSWORD: "fnasaservice"
+      MYSQL_ROOT_PASSWORD: "fnasaservice"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - my-db:/var/lib/mysql
+
+  filer:
+    build: filer
+    environment:
+      BASE_URL: "http://192.168.0.105:8080/"
+      STORAGE_DIRECTORY: "/var/lib/filer"
+    ports:
+      - "8080:80"
+    volumes:
+      - filer-data:/var/lib/filer
+
+  controller:
+    build: controller
+    environment:
+      DOCKER_REGISTRY: "192.168.0.108"
+    ports:
+      - "7070:80"
+
+  allocator:
+    build: allocator
+    environment:
+      DOCKER_HOST: "192.168.0.108"
+    ports:
+      - "6060:80"
+
+volumes:
+  my-db:
+  filer-data:

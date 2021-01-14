@@ -1,5 +1,0 @@
-fastapi
-uvicorn[full]
-aiofiles
-python-multipart
-shortuuid
