@@ -33,16 +33,32 @@ services:
   controller:
     build: controller
     environment:
-      DOCKER_REGISTRY: "192.168.0.108"
+      DOCKER_REGISTRY: "192.168.0.105:6000"
+      DOCKER_HOST: "192.168.33.10"
+      MYSQL_SERVER: "192.168.0.105"
+      MYSQL_DATABASE: "db"
+      MYSQL_USER: "faas"
+      MYSQL_PASSWORD: "fnasaservice"
+    depends_on:
+      - "db"
     ports:
       - "7070:80"
+    restart: on-failure
 
   allocator:
     build: allocator
     environment:
-      DOCKER_HOST: "192.168.0.108"
+      DOCKER_REGISTRY: "192.168.0.105:6000"
+      DOCKER_HOST: "192.168.33.10"
+      MYSQL_SERVER: "192.168.0.105"
+      MYSQL_DATABASE: "db"
+      MYSQL_USER: "faas"
+      MYSQL_PASSWORD: "fnasaservice"
+    depends_on:
+      - "db"
     ports:
       - "6060:80"
+    restart: on-failure
 
 volumes:
   my-db:

@@ -1,0 +1,45 @@
+- name: Install Docker and configure remote access
+  hosts: ["docker-host"]
+
+  tasks:
+    - name: Download Docker installation script
+      get_url:
+        url: https://get.docker.com/
+        dest: /usr/local/bin/install-docker.sh
+        mode: 0755
+
+    - name: Run Docker installation script
+      become: yes
+      shell:
+        cmd: /usr/local/bin/install-docker.sh
+        creates: /usr/bin/docker
+
+    - name: Create Systemd configuration directory for Docker
+      become: yes
+      file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+
+    - name: Push Systemd configuration of Docker
+      become: yes
+      copy:
+        src: systemd-config.conf
+        dest: /etc/systemd/system/docker.service.d/remote-access.conf
+      register: config
+    
+    - name: Push client configuration of Docker
+      become: yes
+      copy:
+        src: docker-daemon.json
+        dest: /etc/docker/daemon.json
+      register: daemon
+
+    - name: Reload Systemctl
+      become: yes
+      command: systemctl daemon-reload
+      when: config.changed
+
+    - name: Restart Docker service
+      become: yes
+      command: systemctl restart docker.service
+      when: config.changed or daemon.changed
