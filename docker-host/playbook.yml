@@ -53,8 +53,5 @@
       pip:
         name: docker-py
     
-    - name: Stops previous running container
-      command: sudo docker rm -f 896bee6fd6d128fb82402fcf0a722f10230e8de76716c389658f30d9b730ee47  
-
     - name: Runs the cadvisor container (visible on "host-name port")
       command: sudo docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --publish=8888:8080 --detach=true --name=cadvisor --privileged --device=/dev/kmsg gcr.io/cadvisor/cadvisor:v0.36.0
