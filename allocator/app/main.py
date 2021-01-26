@@ -1,8 +1,9 @@
 import docker
 from fastapi import FastAPI, HTTPException
-from models import Function
+from models import Function, Container
 from config import Settings
 from schemas import InvocationParams, InvocationResult
+import datetime
 
 
 app = FastAPI()
@@ -16,9 +17,15 @@ def run_function(id: str, params: InvocationParams) -> InvocationResult:
     if not func:
         raise HTTPException(404, "Function not found")
     image_tag = f"{settings.docker_registry}/{id}"
-    try:
-        container = client.containers.get(image_tag)
-    except docker.errors.NotFound:
-        container = client.containers.run(image_tag, name=id, detach=True, tty=True)
+    container = None
+    for cont in func.containers:
+        if not cont.is_active:
+            container = client.containers.get(cont.id)
+    if not container:
+        container = client.containers.run(image_tag, detach=True, tty=True)
+        cont = Container.create(id=container.id, function=func)
     exitcode, output = container.exec_run(["python3", "run.py", func.handler])
+    cont.stopped_at = datetime.datetime.now()
+    cont.is_active = False
+    cont.save()
     return InvocationResult(exitcode=exitcode, output=output.decode("UTF-8"))

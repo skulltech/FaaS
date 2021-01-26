@@ -45,13 +45,16 @@
       when: config.changed or daemon.changed
 
     - name: Install pip
+      become: yes
       apt:
         name: python3-pip
         state: present
   
     - name: Install docker-py
+      become: yes
       pip:
         name: docker-py
     
     - name: Runs the cadvisor container (visible on "host-name port")
-      command: sudo docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --publish=8888:8080 --detach=true --name=cadvisor --privileged --device=/dev/kmsg gcr.io/cadvisor/cadvisor:v0.36.0
+      become: yes
+      command: docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --publish=8888:8080 --detach=true --name=cadvisor --privileged --device=/dev/kmsg gcr.io/cadvisor/cadvisor:v0.36.0

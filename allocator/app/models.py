@@ -1,5 +1,13 @@
-from peewee import MySQLDatabase, Model, CharField
+from peewee import (
+    MySQLDatabase,
+    Model,
+    CharField,
+    ForeignKeyField,
+    DateTimeField,
+    BooleanField,
+)
 from config import Settings
+import datetime
 
 settings = Settings()
 
@@ -16,10 +24,20 @@ class Function(Model):
     id = CharField(primary_key=True)
     handler = CharField()
     payload = CharField()
-    server = CharField(null=True)
 
     class Meta:
         database = db
 
 
-db.create_tables([Function])
+class Container(Model):
+    id = CharField(primary_key=True)
+    function = ForeignKeyField(Function, backref="containers")
+    created_at = DateTimeField(default=datetime.datetime.now)
+    stopped_at = DateTimeField(null=True)
+    is_active = BooleanField(default=True)
+
+    class Meta:
+        database = db
+
+
+db.create_tables([Function, Container])

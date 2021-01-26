@@ -5,6 +5,8 @@ import os
 import shortuuid
 from config import Settings
 from schemas import FileOut, FileOutList
+from starlette.responses import Response
+from starlette.status import HTTP_200_OK
 
 
 app = FastAPI()
@@ -48,3 +50,9 @@ async def create_file(file: UploadFile = File(...)) -> FileOut:
     with open(os.path.join(settings.storage_directory, filename), "wb") as f:
         f.write(await file.read())
     return FileOut(filename=filename, url=file_url(filename))
+
+
+@app.delete("/files/{filename}")
+async def delete_file(filename: str) -> FileResponse:
+    os.remove(os.path.join(settings.storage_directory, filename))
+    return Response(status_code=HTTP_200_OK)
