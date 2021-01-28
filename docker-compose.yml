@@ -54,11 +54,18 @@ services:
       MYSQL_DATABASE: "db"
       MYSQL_USER: "faas"
       MYSQL_PASSWORD: "fnasaservice"
+      WARM_DURATION: "20"
+      PURGE_EVERY: "5"
     depends_on:
       - "db"
     ports:
       - "6060:80"
     restart: on-failure
+
+  adminer:
+    image: adminer
+    ports:
+      - "4040:8080"
 
 volumes:
   my-db:

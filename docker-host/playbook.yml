@@ -26,7 +26,7 @@
         src: systemd-config.conf
         dest: /etc/systemd/system/docker.service.d/remote-access.conf
       register: config
-    
+
     - name: Push client configuration of Docker
       become: yes
       copy:
@@ -49,12 +49,23 @@
       apt:
         name: python3-pip
         state: present
-  
+
     - name: Install docker-py
       become: yes
       pip:
         name: docker-py
-    
-    - name: Runs the cadvisor container (visible on "host-name port")
+
+    - name: Check if cadvisor container exists
+      docker_container_info:
+        name: cadvisor
+      register: result
+
+    - name: Create and run the cadvisor container
+      become: yes
+      command: docker start cadvisor
+      when: result.exists
+
+    - name: Create and run the cadvisor container
       become: yes
       command: docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --publish=8888:8080 --detach=true --name=cadvisor --privileged --device=/dev/kmsg gcr.io/cadvisor/cadvisor:v0.36.0
+      when: not result.exists

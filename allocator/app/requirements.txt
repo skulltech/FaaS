@@ -3,3 +3,4 @@ uvicorn
 peewee
 docker
 mysqlclient
+fastapi-utils
